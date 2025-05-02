@@ -8,12 +8,14 @@
     <div class="card shadow p-4 rounded">
         <h3 class="mb-4 text-center text-dark">Lista de Adopciones</h3>
 
-        <table class="table table-striped">
+        <!-- Tabla de adopciones -->
+        <table class="table table-striped table-bordered table-hover">
             <thead class="table-dark">
                 <tr>
                     <th>Mascota</th>
                     <th>Adoptante</th>
                     <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,13 +25,33 @@
                         <td>@adopcion.Pets.Nombre</td>
                         <td>@adopcion.Adopter.Nombre</td>
                         <td>
-                            <span class="badge bg-success">
-                                @adopcion.Pets.EstadoAdopcion
-                            </span>
+                            @if (adopcion.Pets.EstadoAdopcion == "adoptada")
+                            {
+                                <span class="badge bg-danger">@adopcion.Pets.EstadoAdopcion</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@adopcion.Pets.EstadoAdopcion</span>
+                            }
+                        </td>
+                        <td>
+                            <!-- Enlace para ver más detalles de la adopción -->
+                            <a href="@Url.Action("DetallesAdopcion", "Pet", new { id = adopcion.Id })" class="btn btn-info btn-sm">
+                                Detalles
+                            </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+
+        <!-- Mensaje cuando no hay adopciones -->
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning mt-4">
+                No hay adopciones registradas en el sistema.
+            </div>
+        }
+
     </div>
 </div>
