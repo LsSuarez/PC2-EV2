@@ -20,6 +20,7 @@ namespace EvaluacionContinua2.Controllers
             _context = context;
         }
 
+        // Acción para crear una mascota
         public IActionResult Crear()
         {
             return View();
@@ -33,11 +34,12 @@ namespace EvaluacionContinua2.Controllers
             {
                 _context.Add(pet);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("","");
+                return RedirectToAction("ListaAdopciones", "Pet"); // Redirige a la lista de adopciones
             }
             return View(pet);
         }
 
+        // Acción para asignar una mascota disponible
         public async Task<IActionResult> Asignar()
         {
             var mascotasDisponibles = await _context.Pets
@@ -49,7 +51,7 @@ namespace EvaluacionContinua2.Controllers
             return View();
         }
 
-
+        // Acción para adoptar una mascota
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adoptar(int PetId, string NombreAdoptante)
@@ -68,13 +70,14 @@ namespace EvaluacionContinua2.Controllers
                 AdopterId = adoptante.Id
             };
 
-            pet.EstadoAdopcion = "adoptada";
+            pet.EstadoAdopcion = "adoptada"; // Cambia el estado de la mascota a "adoptada"
             _context.Adoptions.Add(adopcion);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("","");
+            return RedirectToAction("ListaAdopciones", "Pet"); // Redirige a la lista de adopciones
         }
 
+        // Acción para ver la lista de adopciones
         public async Task<IActionResult> ListaAdopciones()
         {
             var adopciones = await _context.Adoptions
@@ -82,10 +85,26 @@ namespace EvaluacionContinua2.Controllers
                 .Include(a => a.Adopter)
                 .ToListAsync();
 
-            return View(adopciones);
+            return View(adopciones); // Devuelve la vista con las adopciones
         }
 
+        // Acción para ver los detalles de una adopción
+        public async Task<IActionResult> DetallesAdopcion(int id)
+        {
+            var adopcion = await _context.Adoptions
+                .Include(a => a.Pets)      // Incluye la mascota
+                .Include(a => a.Adopter)   // Incluye el adoptante
+                .FirstOrDefaultAsync(a => a.Id == id);  // Busca la adopción por Id
 
+            if (adopcion == null)
+            {
+                return NotFound();  // Si no encuentra la adopción, devuelve error 404
+            }
+
+            return View(adopcion);  // Devuelve la vista con los detalles de la adopción
+        }
+
+        // Acción de error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

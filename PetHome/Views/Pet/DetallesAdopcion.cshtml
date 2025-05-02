@@ -1,0 +1,33 @@
+@model EvaluacionContinua2.Models.Adoption
+
+@{
+    ViewData["Title"] = "Detalles de la Adopción";
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4 rounded">
+        <h3 class="mb-4 text-center text-dark">Detalles de la Adopción</h3>
+
+        <!-- Detalles de la mascota -->
+        <h5 class="text-muted">Mascota</h5>
+        <p><strong>Nombre:</strong> @Model.Pets.Nombre</p>
+        <p><strong>Tipo:</strong> @Model.Pets.Tipo</p>
+        <p><strong>Edad:</strong> @Model.Pets.Edad años</p>
+        <p><strong>Estado de adopción:</strong> @Model.Pets.EstadoAdopcion</p>
+
+        <hr />
+
+        <!-- Detalles del adoptante -->
+        <h5 class="text-muted">Adoptante</h5>
+        <p><strong>Nombre:</strong> @Model.Adopter.Nombre</p>
+
+        <hr />
+
+        <!-- Botón de regreso -->
+        <div class="text-center">
+            <a href="@Url.Action("ListaAdopciones", "Pet")" class="btn btn-primary">
+                Regresar a la lista de adopciones
+            </a>
+        </div>
+    </div>
+</div>
